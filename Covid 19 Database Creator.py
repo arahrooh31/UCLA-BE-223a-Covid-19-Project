@@ -1,14 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Oct 24 00:42:20 2020
 
-@author: admin
-"""
 import sqlite3
 
 
 conn = sqlite3.connect('BE223_Covid_Database_Updated.db')
 c = conn.cursor()
+
 
 def create_table():
     c.execute("""CREATE TABLE IF NOT EXISTS CommunityTesting(
@@ -72,6 +68,7 @@ def create_table():
     
 conn.commit()
 
+
 def data_entry():
     with open('communitytesting.csv', 'r') as file1:
         no_records1 = 0
@@ -126,6 +123,7 @@ def data_entry():
     c.close()
     conn.close()
 
+    
 create_table()
 data_entry()
 
