@@ -301,13 +301,7 @@ def data_entry():
              c.execute("INSERT INTO Demographics VALUES(?,?,?,?,?,?,?,?,?)", row.split(","))
              conn.commit()
              no_records17 += 1   
-    
-    with open('neighborhood_data_latimes.csv', 'r') as file18:
-        no_records18 = 0
-        for row in file18:
-            c.execute("INSERT INTO Neighborhoods VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", row.split(','))
-            conn.commit()
-            no_records18 += 1      
+                
             
     c.execute('DELETE FROM CDCRStateTotal WHERE rowid = 1')
     c.execute('DELETE FROM AgeData WHERE rowid = 1')
