@@ -15,6 +15,9 @@ df = pd.read_csv('neighborhood_data_latimes.csv')
 df.to_sql('neighborhoods', conn, if_exists="append", index = False)
 c.execute('''Select * From neighborhoods''').fetchall()
 
+df1 = pd.read_csv('latimes-place-totals.csv')
+df1.to_sql('PlaceTotals',conn, if_exists = 'append', index = False)
+c.execute('''Select * From PlaceTotals''').fetchall()
 
 def create_table():
     c.execute("""CREATE TABLE IF NOT EXISTS CDCRStateTotal(
