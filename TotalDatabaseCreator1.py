@@ -320,7 +320,12 @@ def data_entry():
     c.execute('DELETE FROM LATimesStateTotal WHERE rowid = 1')
     c.execute('DELETE FROM CDPHStateTotal WHERE rowid = 1')
     c.execute('DELETE FROM HospitalPatientCountyTotals WHERE rowid = 1')
-
+    c.execute('DELETE FROM CommunityTesting WHERE rowid = 1')
+    c.execute('DELETE FROM DeathsbyDate WHERE rowid = 1')
+    c.execute('DELETE FROM DeathsbyCommunity WHERE rowid = 1')
+    c.execute('DELETE FROM PersonsTested WHERE rowid = 1')
+    c.execute('DELETE FROM DailyTesting WHERE rowid = 1')
+    c.execute('DELETE FROM Demographics WHERE rowid = 1')
     
     conn.commit()
     c.close()
