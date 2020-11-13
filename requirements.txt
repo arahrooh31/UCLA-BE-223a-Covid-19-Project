@@ -7,3 +7,4 @@ os.path
 pandas
 selenium
 io
+sqlite3
