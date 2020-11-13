@@ -1,7 +1,7 @@
 pandas
 numpy
 requests
-re
+regex
 json
 os.path
 pandas
