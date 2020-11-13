@@ -2,8 +2,7 @@ pandas
 numpy
 requests
 regex
-json
-os.path
+os
 pandas
 selenium
 io
