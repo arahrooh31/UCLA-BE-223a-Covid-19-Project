@@ -1,15 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 13 01:31:31 2020
-
-@author: admin
-"""
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov  9 00:29:54 2020
-
-@author: admin
-"""
 
 
 import sqlite3
