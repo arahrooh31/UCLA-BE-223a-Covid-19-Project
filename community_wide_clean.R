@@ -7,6 +7,8 @@
 # https://www.census.gov/data/tables/time-series/demo/popest/2010s-state-total.html#par_textimage_1574439295
 
 if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+if(!require(zoo)) install.packages("zoo", repos = "http://cran.us.r-project.org")
+seismicRoll
 options(warn = -1)
 
 local_path = "/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/UCLA-BE-223a-Covid-19-Project/"
@@ -129,8 +131,8 @@ collated_data_clean$date = as.Date(collated_data_clean$date, format = "%Y-%m-%d"
 collated_data_clean = 
   collated_data_clean %>% 
   group_by(place_ID) %>% 
-  mutate(case_incremental_3d_MA = roll_mean(new_cases, 3, align = "right", fill = 0)) %>% 
-  mutate(case_incremental_7d_MA = roll_mean(new_cases, 7, align = "right", fill = 0)) %>% 
+  mutate(case_incremental_3d_MA = rollmean(new_cases, 3, align = "right", fill = 0)) %>% 
+  mutate(case_incremental_7d_MA = rollmean(new_cases, 7, align = "right", fill = 0)) %>% 
   mutate(new_3d_lead = lead(new_cases, 3)) %>% 
   mutate(new_7d_lead = lead(new_cases, 7)) %>% 
   rename("new_cases_today" = "new_cases") %>% 
