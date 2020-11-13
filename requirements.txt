@@ -2,8 +2,6 @@ pandas
 numpy
 requests
 regex
-os
 pandas
 selenium
-io
 sqlite3
