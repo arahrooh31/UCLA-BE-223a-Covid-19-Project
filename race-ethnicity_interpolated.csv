@@ -1,0 +1,266 @@
+,City,ASIAN,BLACK,LATINO,WHITE,NON.WHITE
+0,Veterans Administration,0,3,1,3,6
+1,Rolling Hills,3,0,4,27,15
+2,Palos Verdes Estates,15,1,10,111,67
+3,Bel-Air,4,0,9,70,26
+4,Bradbury,1,0,3,9,8
+5,Century City,3,0,6,50,19
+6,Beverly Crest,2,2,9,105,27
+7,Rancho Palos Verdes,70,9,61,286,315
+8,Rancho Dominguez,1,7,10,12,29
+9,Pacific Palisades,8,1,20,234,56
+10,View Park-Windsor Hills,1,107,7,6,215
+11,Rolling Hills Estates,11,1,12,64,51
+12,La Habra Heights,7,1,19,43,45
+13,Westlake Village,3,0,10,81,25
+14,Ladera Heights,1,51,5,13,108
+15,Encino,13,11,94,371,171
+16,Sierra Madre,3,1,27,93,44
+17,Topanga,1,0,9,71,18
+18,Malibu,1,1,18,122,28
+19,Cheviot Hills,4,1,15,60,30
+20,San Marino,41,0,16,63,149
+21,San Pasqual,2,0,9,13,18
+22,Angeles Crest,0,1,3,9,6
+23,Porter Ranch,45,5,49,167,200
+24,Beverly Hills,17,5,43,306,126
+25,La Cañada Flintridge,27,1,25,159,122
+26,Northwest Antelope Valley,0,0,12,28,15
+27,Hollywood Hills West,3,4,22,139,46
+28,Leona Valley,0,0,2,12,5
+29,Hidden Hills,0,0,3,18,4
+30,West San Dimas,0,0,1,2,2
+31,Southeast Antelope Valley,0,0,23,44,25
+32,Chatsworth,34,8,126,254,247
+33,Northwest Palmdale,0,0,9,25,16
+34,Agua Dulce,0,0,9,29,10
+35,Arcadia,162,4,139,236,649
+36,Woodland Hills,28,19,120,516,266
+37,West Hollywood,9,11,85,320,137
+38,Shadow Hills,6,1,100,85,110
+39,Downtown,40,69,272,49,479
+40,West Hills,29,10,113,304,232
+41,Brentwood,13,4,37,291,101
+42,Beverlywood,3,2,9,53,24
+43,Culver City,32,46,246,207,412
+44,West Los Angeles,9,3,17,107,60
+45,Torrance,267,29,474,795,1357
+46,Monterey Park,248,0,459,49,1140
+47,Northeast Antelope Valley,0,4,29,31,35
+48,La Crescenta-Montrose,24,1,47,135,129
+49,Marina del Rey,4,4,11,71,37
+50,Calabasas,12,2,32,212,79
+51,Cerritos,204,37,144,120,841
+52,Playa del Rey,5,4,25,78,54
+53,Windsor Square,15,2,22,23,72
+54,Beverly Grove,7,4,34,194,79
+55,Temple City,86,3,180,140,423
+56,Tarzana,12,14,142,277,213
+57,Leimert Park,3,104,35,1,239
+58,West Carson,36,24,166,67,306
+59,Studio City,12,14,78,293,153
+60,Santa Monica,40,32,302,663,495
+61,North El Monte,6,0,30,16,45
+62,Hancock Park,8,4,22,76,59
+63,Hollywood Hills,9,11,54,176,114
+64,Glendale,215,21,1018,1167,1839
+65,Glendora,22,7,295,373,338
+66,Tujunga Canyons,0,0,9,21,11
+67,Toluca Lake,2,4,29,61,44
+68,La Verne,16,10,202,234,244
+69,Lopez/Kagel Canyons,0,0,4,4,5
+70,Acton,0,0,21,58,24
+71,Ramona,9,1,28,14,56
+72,Sunland,7,3,87,109,110
+73,South Pasadena,42,7,104,135,247
+74,Agoura Hills,8,1,37,186,71
+75,Altadena,12,148,230,186,529
+76,Sherman Oaks,23,30,192,499,329
+77,Playa Vista,3,1,22,8,33
+78,Carthay,2,6,20,31,42
+79,North Whittier,4,0,66,11,67
+80,Chinatown,45,1,60,2,192
+81,San Dimas,21,10,219,235,282
+82,Manhattan Beach,14,1,46,321,101
+83,Granada Hills,55,19,277,310,462
+84,Green Valley,0,0,2,6,3
+85,Valley Village,7,14,121,178,165
+86,Walnut,114,12,152,61,502
+87,Baldwin Hills/Crenshaw,9,240,138,10,598
+88,Redondo Beach,41,15,225,492,384
+89,San Gabriel,130,4,318,75,667
+90,Gramercy Park,0,97,30,0,204
+91,Claremont,28,18,146,251,259
+92,Burbank,62,17,662,652,849
+93,East Pasadena,8,1,57,24,77
+94,El Segundo,7,1,43,137,73
+95,Diamond Bar,163,29,281,194,806
+96,Pico-Robertson,6,11,35,146,98
+97,East San Gabriel,60,3,158,69,327
+98,Tujunga,11,5,184,178,214
+99,Hacienda Heights,130,7,543,133,852
+100,Rancho Park,5,1,18,27,36
+101,Los Feliz,32,14,175,224,306
+102,Del Rey,26,13,330,105,379
+103,Rowland Heights,166,12,346,82,824
+104,Westchester,26,77,182,240,406
+105,La Mirada,47,8,417,242,510
+106,Lakewood,74,62,484,459,778
+107,Lake Balboa,14,9,220,131,253
+108,Unincorporated Catalina Island,0,0,1,0,1
+109,South San Gabriel,22,0,104,7,152
+110,Venice,10,22,217,267,277
+111,Eagle Rock,52,6,348,107,468
+112,East La Mirada,2,1,95,56,89
+113,Mar Vista,30,13,275,201,355
+114,Unincorporated Santa Monica Mountains,3,1,14,81,31
+115,Lomita,15,9,138,118,190
+116,Littlerock,0,1,12,8,13
+117,Quartz Hill,1,5,37,76,50
+118,Alhambra,274,13,813,131,1522
+119,Silver Lake,37,11,344,116,420
+120,Unincorporated Santa Susana Mountains,5,1,20,28,39
+121,Ridge Route,0,0,10,15,11
+122,Pasadena,91,209,1197,583,1688
+123,Atwater Village,19,2,203,36,237
+124,San Pedro,26,54,870,391,917
+125,Mid-Wilshire,55,105,220,154,568
+126,Castaic Canyons,2,2,34,63,42
+127,Mission Hills,13,8,260,58,266
+128,Duarte,18,20,246,75,300
+129,Larchmont,17,2,85,23,133
+130,Manchester Square,0,101,59,0,236
+131,Gardena,106,158,489,79,1040
+132,Del Aire,5,7,111,33,123
+133,Monrovia,16,33,345,188,406
+134,Artesia,30,5,167,47,248
+135,Hasley Canyon,0,0,3,2,3
+136,Covina,33,26,536,237,605
+137,Carson,148,248,832,118,1619
+138,Desert View Highlands,1,2,16,12,23
+139,Elizabeth Lake,0,0,5,11,6
+140,Fairfax,3,3,19,117,39
+141,Hermosa Beach,6,1,33,173,57
+142,Industry,0,0,16,2,15
+143,Lake Hughes,0,0,2,4,2
+144,Mount Washington,11,3,207,29,207
+145,Signal Hill,11,10,71,36,122
+146,Sun Village,0,11,96,48,102
+147,Whittier,21,8,1246,344,1083
+148,Rosemead,175,3,582,47,1007
+149,Sawtelle,48,10,217,196,371
+150,West Covina,161,69,1271,271,1650
+151,Northridge,56,34,400,315,597
+152,Valley Glen,21,25,713,258,736
+153,Charter Oak,6,4,87,44,103
+154,Santa Fe Springs,4,6,340,37,296
+155,Mayflower Village,8,11,150,38,167
+156,Winnetka,49,22,507,187,616
+157,Santa Clarita,55,37,868,1198,1009
+158,Reseda,47,29,720,255,802
+159,Stevenson Ranch,7,2,29,62,61
+160,Alondra Park,8,18,79,25,130
+161,Palms,58,58,265,180,539
+162,Mid-City,13,223,628,54,970
+163,East Hollywood,77,19,1190,143,1253
+164,Montecito Heights,19,5,293,22,302
+165,Montebello,47,3,1233,74,1134
+166,Chesterfield Square,0,39,59,0,122
+167,Arlington Heights,19,60,333,11,432
+168,Jefferson Park,4,121,276,6,462
+169,Lake View Terrace,4,22,166,29,188
+170,Lancaster,31,208,775,702,1176
+171,Downey,53,42,1652,339,1574
+172,Hollywood,37,45,874,352,943
+173,Avalon,0,0,38,17,32
+174,Pico Rivera,10,3,1479,52,1200
+175,Castaic,6,24,144,87,183
+176,Long Beach,404,745,4401,1704,6341
+177,Hyde Park,2,270,266,8,737
+178,Elysian Valley,12,0,120,7,137
+179,Elysian Park,7,0,32,0,50
+180,Harbor City,22,28,301,65,362
+181,Koreatown,250,61,1640,94,2189
+182,Glassell Park,27,3,413,35,416
+183,Echo Park,51,9,689,57,724
+184,Harvard Heights,16,33,328,6,369
+185,Avocado Heights,10,1,365,21,318
+186,North Hollywood,30,48,1196,232,1167
+187,Vincent,8,5,238,41,231
+188,Canoga Park,40,25,721,180,757
+189,Val Verde,0,1,24,7,23
+190,Bellflower,49,100,830,248,1035
+191,West Whittier-Los Nietos,1,2,565,41,455
+192,Inglewood,8,584,1378,49,2218
+193,Arleta,23,7,593,45,554
+194,Norwalk,81,49,1727,216,1717
+195,El Sereno,31,7,886,22,800
+196,South Whittier,11,6,1023,148,859
+197,Sun Valley,41,16,1402,150,1279
+198,Lawndale,22,41,442,77,507
+199,West Puente Valley,14,5,513,20,451
+200,Van Nuys,44,69,1672,265,1639
+201,Valinda,18,9,400,28,389
+202,North Hills,43,28,799,142,826
+203,Highland Park,43,15,1110,71,1049
+204,Sylmar,16,31,1292,159,1132
+205,West Adams,2,91,325,5,436
+206,Harvard Park,0,55,132,1,209
+207,Palmdale,31,181,1182,527,1433
+208,West Compton,0,35,51,0,110
+209,Irwindale,0,0,34,1,27
+210,Westwood,74,10,89,333,365
+211,Lake Los Angeles,1,11,105,58,121
+212,Lincoln Heights,45,1,501,7,532
+213,Westlake,116,45,2030,51,2037
+214,Cypress Park,7,0,213,5,190
+215,Harbor Gateway,43,72,564,51,719
+216,Commerce,0,0,313,6,247
+217,Pico-Union,21,13,963,14,843
+218,Hawthorne,44,312,1015,123,1543
+219,Athens,1,55,96,1,184
+220,Azusa,16,16,765,115,696
+221,Exposition Park,3,132,464,7,624
+222,Citrus,5,4,206,30,189
+223,El Monte,145,6,2245,93,2214
+224,San Fernando,0,1,561,20,444
+225,Adams-Normandie,6,48,291,10,341
+226,South San Jose Hills,8,4,446,16,385
+227,Pomona,73,153,2578,282,2562
+228,La Puente,19,8,903,30,786
+229,Vermont Square,3,198,681,7,917
+230,Baldwin Park,60,11,1588,62,1441
+231,Panorama City,53,31,1228,83,1195
+232,East Los Angeles,8,4,3243,23,2542
+233,Westmont,1,202,329,4,638
+234,South El Monte,11,0,480,11,408
+235,Boyle Heights,15,9,2323,20,1867
+236,Willowbrook,1,170,484,3,699
+237,Vermont-Slauson,0,110,431,3,543
+238,Walnut Park,0,0,411,6,319
+239,Compton,8,420,1425,8,1923
+240,Bell,2,3,886,23,708
+241,Paramount,16,73,1074,54,1035
+242,Pacoima,9,60,1710,38,1470
+243,Wilmington,9,14,1188,36,990
+244,Green Meadows,0,140,409,1,579
+245,Huntington Park,3,4,1555,20,1223
+246,Vermont Vista,1,117,323,2,473
+247,Hawaiian Gardens,8,7,292,17,273
+248,South Gate,5,6,2366,62,1864
+249,Vermont Knolls,1,98,299,2,419
+250,Florence,1,137,814,1,896
+251,University Park,25,18,299,66,361
+252,Broadway-Manchester,0,103,366,2,477
+253,Maywood,0,0,721,8,560
+254,Lynwood,5,104,1527,22,1394
+255,Lennox,1,10,546,9,453
+256,Historic South-Central,3,56,1155,6,1009
+257,South Park,0,65,638,3,620
+258,East Compton,0,35,268,1,279
+259,Cudahy,1,0,605,11,475
+260,Central-Alameda,1,60,922,4,832
+261,Florence-Firestone,0,86,1379,5,1226
+262,Bell Gardens,1,2,1099,22,862
+263,Vernon,0,0,2,0,1
+264,Watts,0,152,604,2,752
