@@ -6,17 +6,25 @@
 ## community-level population information obtained from US census data
 # https://www.census.gov/data/tables/time-series/demo/popest/2010s-state-total.html#par_textimage_1574439295
 
-if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
-if(!require(zoo)) install.packages("zoo", repos = "http://cran.us.r-project.org")
-seismicRoll
 options(warn = -1)
 
-local_path = "/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/UCLA-BE-223a-Covid-19-Project/"
-app_path = paste0(local_path, "COVID_shinyLA/")
-cleaned_data_path = paste0(app_path, 'output_clean/')
-county_data_path = paste0(app_path, 'county/')
-latimes_data_path = paste0(app_path, 'csv/')
-demographic_data_path = paste0(app_path, 'neighborhoods/')
+if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+if(!require(zoo)) install.packages("zoo", repos = "http://cran.us.r-project.org")
+if(!require(reticulate)) install.packages("reticulate", repos = "http://cran.us.r-project.org")
+if(!require(RcppRoll)) install.packages("RcppRoll", repos = "http://cran.us.r-project.org")
+
+
+local_path = "/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/"
+code_path = paste0(local_path, "code/")
+data_path = paste0(local_path, "data/")
+
+# Output for cleaned files
+cleaned_data_path = paste0(data_path, 'output_clean/')
+
+# Source in the LA_county_scraper -- update TODAY's COVID by community
+setwd(paste0(data_path, "dynamic/"))
+reticulate::source_python(paste0(code_path, "LA_county_scraper.py"))
+county_data_path = paste0(data_path, 'dynamic/county/')
 
 #===============================================
 # Cleaning of community-level time series data #
@@ -131,6 +139,7 @@ collated_data_clean$date = as.Date(collated_data_clean$date, format = "%Y-%m-%d"
 collated_data_clean = 
   collated_data_clean %>% 
   group_by(place_ID) %>% 
+  mutate(if_first_report = if_else(row_number() == 1, 1, 0)) %>% 
   mutate(case_incremental_3d_MA = rollmean(new_cases, 3, align = "right", fill = 0)) %>% 
   mutate(case_incremental_7d_MA = rollmean(new_cases, 7, align = "right", fill = 0)) %>% 
   mutate(new_3d_lead = lead(new_cases, 3)) %>% 
@@ -138,10 +147,49 @@ collated_data_clean =
   rename("new_cases_today" = "new_cases") %>% 
   rename("cumulative_cases_today" = "cases") %>% 
   select(place_ID, date, new_cases_today, cumulative_cases_today, case_incremental_3d_MA, case_incremental_7d_MA,
-         new_3d_lead, new_7d_lead, last_update)
+         new_3d_lead, new_7d_lead, if_first_report, last_update)
+
+# Add in population info for each community
+CSA_test_table = read.csv(paste0(county_data_path, "communitytesting.csv"))
+population_community_raw =
+  CSA_test_table %>% 
+  select(geo_merge, population)
+population_community_raw =
+  population_community_raw %>% 
+  mutate(place_ID_1 = gsub(pattern = "City of ", replacement = '', x = population_community_raw$geo_merge)) 
+population_community_raw =
+  population_community_raw %>% 
+  mutate(place_ID_2 = gsub(pattern = "Los Angeles - ", replacement = '', x = population_community_raw$place_ID_1)) 
+population_community_raw =
+  population_community_raw %>% 
+  mutate(place_ID_3 = gsub(pattern = "[[:punct:]]+", replacement = '', x = population_community_raw$place_ID_2))
+population_community =
+  population_community_raw %>% 
+  mutate(place_ID = gsub(pattern = "([a-z])([A-Z])", replacement = "\\1 \\2", x = population_community_raw$place_ID_3)) %>% 
+  select(place_ID, population) %>% 
+  distinct() %>% 
+  drop_na()
+# N = 329 (communities w/ population data)
+
+# Adding cumulative window of 2 weeks and 3 weeks
+collated_data_final =
+  collated_data_clean %>% 
+  mutate(cumulative_cases_2w = RcppRoll::roll_sum(new_cases_today, 14, fill = 0, align = "right")) %>% 
+  mutate(cumulative_cases_3w = RcppRoll::roll_sum(new_cases_today, 21, fill = 0, align = "right")) %>% 
+  left_join(population_community, by = c("place_ID" = "place_ID")) %>% 
+  mutate(cumulative_2w_pop_adj = cumulative_cases_2w/population*100) %>% 
+  mutate(cumulative_3w_pop_adj = cumulative_cases_3w/population*100) %>% 
+  mutate(new_3d_MA_pop_adj = case_incremental_3d_MA/population*100) %>% 
+  mutate(crude_rate = cumulative_cases_today/population) %>% 
+  select(place_ID, date, population, crude_rate, # outcome (predict variable for "individual")
+         new_7d_lead, new_3d_lead, # outcome (predict variable for "outbreak")
+         cumulative_3w_pop_adj, cumulative_2w_pop_adj, new_3d_MA_pop_adj, # adjusted variables by population size
+         new_cases_today, cumulative_cases_today, case_incremental_3d_MA, case_incremental_7d_MA, 
+         if_first_report, last_update)
 
 # save file
-write.csv(collated_data_clean, paste0(cleaned_data_path, "community_TimeCases_long.csv"), row.names = F)
+collated_data_final = as.data.frame(collated_data_final)
+write.csv(collated_data_final, paste0(cleaned_data_path, "community_TimeCases_long.csv"), row.names = F)
 print("community_TimeCases_long.csv created.")
 
 
@@ -149,13 +197,14 @@ print("community_TimeCases_long.csv created.")
 # Cleaning of community-level case/test/death data -- TODAY! #
 #=============================================================
 CSA_case_death = read.csv(paste0(county_data_path, "deathsbycommunity.csv"))
-CSA_test_table = read.csv(paste0(county_data_path, "communitytesting.csv"))
 
 # Merge Community level data together
 community_merge = 
   CSA_test_table %>% 
-  select(-population) %>% 
-  full_join(CSA_case_death, by = c("geo_merge" = "geo_merge"))
+  # select(-population) %>% 
+  full_join(CSA_case_death, by = c("geo_merge" = "geo_merge")) %>% 
+  select(-population.y) %>% 
+  rename(population = population.x)
 # Clean place_ID
 community_merge_CleanID =
   community_merge %>% 
@@ -176,51 +225,46 @@ community_merge_CleanID =
 #   select(place_ID, geo_merge) %>% 
 #   distinct(place_ID, .keep_all = TRUE) 
 
+# Clean the place_ID (LA_cases_time_series)
+LA_cases_time_series_clean =
+  LA_cases_time_series %>%
+  mutate(place_ID_1 = gsub(pattern = "[[:punct:]]+", replacement = '', x = LA_cases_time_series$place))
+LA_cases_time_series_clean =
+  LA_cases_time_series_clean %>%
+  mutate(place_ID = gsub(pattern = "([a-z])([A-Z])", replacement = "\\1 \\2", x = LA_cases_time_series_clean$place_ID_1)) %>% 
+  select(place_ID, longitude, latitude) %>% 
+  distinct()
+
 # Select potential useful variables
 community_merge_today =
   community_merge_CleanID %>% 
+  left_join(LA_cases_time_series_clean, by = c("place_ID" = "place_ID")) %>% 
   rename("cumulative_cases_today" = "cases_final", "adj_case_rate" = "adj_case_rate_final", 
          "cumulative_deaths_today" = "deaths_final", "adj_death_rate" = "adj_death_rate_final",
          "cumulative_persons_tested_today" = "persons_tested_final", "adj_test_rate" = "adj_testing_rate_final",
          "cumulative_persons_pos_today" = "persons_tested_pos_final", "adj_test_pos_rate" = "adj_pos_testing_rate_final") %>% 
-  select(place_ID, cumulative_cases_today, adj_case_rate, cumulative_deaths_today, adj_death_rate,
-         cumulative_persons_tested_today, adj_test_rate, cumulative_persons_pos_today, adj_test_pos_rate)
+  filter(place_ID %in% unique(collated_data_clean$place_ID)) %>% 
+  select(place_ID, longitude, latitude, population, cumulative_cases_today, adj_case_rate, cumulative_deaths_today, adj_death_rate,
+         cumulative_persons_tested_today, adj_test_rate, cumulative_persons_pos_today, adj_test_pos_rate, geo_merge)
 
 # save file
 write.csv(community_merge_today, paste0(cleaned_data_path, "community_todayUpdated.csv"), row.names = F)
 print("community_todayUpdated.csv created.")
+  
 
+#=============================================================
+# Cleaning of county-level case/test/death data -- TODAY! #
+#=============================================================
+county_case_death = read.csv(paste0(county_data_path, "deathsbydate.csv"))
 
-#===============================================
-# Cleaning of community-level demographic data #
-#===============================================
-community_demo = read.csv(paste0(demographic_data_path, "neighborhood_data_latimes.csv"))
-# N = 265 obs
-# Clean place_ID
-community_demo_CleanID =
-  community_demo %>% 
-  mutate(place_ID_1 = gsub(pattern = "[[:punct:]]+", replacement = '', x = community_demo$Neighborhood))
-community_demo_CleanID =
-  community_demo_CleanID %>% 
-  mutate(place_ID = gsub(pattern = "([a-z])([A-Z])", replacement = "\\1 \\2", x = community_demo_CleanID$place_ID_1)) %>% 
-  select(-place_ID_1)
-# Check for duplicate IDs -- No duplicate place_ID
-# community_demo_CleanID %>%
-#   group_by(place_ID) %>%
-#   summarise(n = n()) %>%
-#   filter(n > 1)
-
-community_demo_numeric =
-  community_demo_CleanID %>% 
-  mutate_at(vars(AGE.65.AND.UP:FOREIGN.BORN.POPULATION, FOUR.YEAR.DEGREES:MASTERS.DEGREE.OR.HIGHER, ASIAN.POPULATION:SINGLE.PARENTS,
-                 HOMEOWNERS:RENTERS, X.20.000.or.less:VETERANS), ~ as.numeric(str_replace(., "%", ""))/100) %>% 
-  mutate(Median.Income = as.numeric(gsub(pattern = "[[:punct:]]+", replacement = '', x = Median.Income))) %>% 
-  mutate(POPULATION.TOTAL = as.numeric(gsub(pattern = "[[:punct:]]+", replacement = '', x = POPULATION.TOTAL))) %>% 
-  mutate(POPULATION.PER.SQMI = as.numeric(gsub(pattern = "[[:punct:]]+", replacement = '', x = POPULATION.PER.SQMI)))
+county_summary = 
+  county_case_death %>% 
+  select(date_use, total_cases, new_case, total_deaths, new_deaths) %>% 
+  rename(Date = date_use, TotalCases = total_cases, DailyCases = new_case, TotalDeaths = total_deaths, NewDeaths = new_deaths)
 
 # save file
-write.csv(community_demo_numeric, paste0(cleaned_data_path, "community_demographic_cleaned.csv"), row.names = F)
-print("community_demographic_cleaned.csv created.")
-  
+write.csv(county_summary, paste0(cleaned_data_path, "LA_county.csv"), row.names = F)
+print("LA_county.csv created.")
+
 
 rm(list = ls())
