@@ -192,9 +192,16 @@ PROPORTION
 
 SCALING
 
-# true positive cases per race in city =   # interpolated positive cases per race in city
-                                             ----------------------------------------
-                                            total interpolated cases for all races in city
+# scaled cases per race in city =    # interpolated positive cases per race in city
+                                      ----------------------------------------        x total acutual cases
+                                     total interpolated cases for all races in city
+                                            
+PERCENTAGE
+
+% of total positives from given race = # true positive cases per race in city
+                                        --------------------------------------
+                                        total population of given race in city
+
 '''
 
 # empty dataframe that will store percentage of each city's positive cases that come from each race
@@ -214,6 +221,7 @@ for i, city_row in city_df.iterrows():
     
     total_interpolated = 0
     raw_race = {}
+    # calculate raw interpolation
     for race, j in column_codes:        
         # get population of given race in the city
         pop_city_race = city_row[j]
@@ -228,11 +236,20 @@ for i, city_row in city_df.iterrows():
         raw_race[race] = int((num_county_positive_race / pop_county_race) * pop_city_race)
         total_interpolated += raw_race[race]
     
-    # scale number of cases by total cases in city
+    # scale number of cases by total cases in city and divide by race population to get percent
     total_cases_in_city = city_row[6]
-    for race, j in column_codes[0:5]:
+    for race, j in column_codes:
+        # scale number of positives by number of total positive cases per city
         scaled_num_positive = int((raw_race[race] / total_interpolated) * total_cases_in_city)
-        city_info[race] = scaled_num_positive
+        
+        # get population of given race in the city
+        pop_city_race = city_row[j]
+        print(pop_city_race)
+        # divide scaled number by population of race in city to get final percentage
+        if pop_city_race != 0:
+            city_info[race] = scaled_num_positive / pop_city_race
+        else:
+            city_info[race] = 0.0
     
     city_info['TOTAL.CASES'] = total_cases_in_city
     city_info['TOTAL.POP'] = city_row[7]
