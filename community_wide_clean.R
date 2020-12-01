@@ -171,7 +171,7 @@ population_community =
   drop_na()
 # N = 329 (communities w/ population data)
 
-# Adding cumulative window of 2 weeks and 3 weeks
+# Adding cumulative window of 2 weeks and 3 weeks, also added crude_rate_7d_lead
 collated_data_final =
   collated_data_clean %>% 
   mutate(cumulative_cases_2w = RcppRoll::roll_sum(new_cases_today, 14, fill = 0, align = "right")) %>% 
@@ -181,7 +181,8 @@ collated_data_final =
   mutate(cumulative_3w_pop_adj = cumulative_cases_3w/population*100) %>% 
   mutate(new_3d_MA_pop_adj = case_incremental_3d_MA/population*100) %>% 
   mutate(crude_rate = cumulative_cases_today/population) %>% 
-  select(place_ID, date, population, crude_rate, # outcome (predict variable for "individual")
+  mutate(crude_rate_7d_lead = rollmean(crude_rate, 7, align = "right", fill = 0)) %>% 
+  select(place_ID, date, population, crude_rate, crude_rate_7d_lead, # outcome (predict variable for "individual")
          new_7d_lead, new_3d_lead, # outcome (predict variable for "outbreak")
          cumulative_3w_pop_adj, cumulative_2w_pop_adj, new_3d_MA_pop_adj, # adjusted variables by population size
          new_cases_today, cumulative_cases_today, case_incremental_3d_MA, case_incremental_7d_MA, 
