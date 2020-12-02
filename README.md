@@ -11,6 +11,7 @@ pip install requests
 
 
 Required packages for R:
+
 if(!require(bnlearn)) install.packages("bnlearn", repos = "http://cran.us.r-project.org")
 
 if(!require(visNetwork)) install.packages("visNetwork", repos = "http://cran.us.r-project.org")
