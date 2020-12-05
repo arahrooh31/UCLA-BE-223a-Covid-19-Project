@@ -24,4 +24,26 @@ if(!require(caret)) install.packages('caret', repos = "http://cran.us.r-project.
 
 if(!require(dplyr)) install.packages('dplyr', repos = "http://cran.us.r-project.org")
 
+if(!require(zoo)) install.packages("zoo", repos = "http://cran.us.r-project.org")
+
+if(!require(reticulate)) install.packages("reticulate", repos = "http://cran.us.r-project.org")
+
+if(!require(RcppRoll)) install.packages("RcppRoll", repos = "http://cran.us.r-project.org")
+
+if(!require(shiny)) install.packages("shiny", repos = "http://cran.us.r-project.org")
+
+if(!require(shinyWidgets)) install.packages("shinyWidgets", repos = "http://cran.us.r-project.org")
+
+if(!require(shinydashboard)) install.packages("shinydashboard", repos = "http://cran.us.r-project.org")
+
+if(!require(shinythemes)) install.packages("shinythemes", repos = "http://cran.us.r-project.org")
+
+if(!require(geojsonio)) install.packages("geojsonio", repos = "http://cran.us.r-project.org")
+
+if(!require(leaflet)) install.packages("leaflet", repos = "http://cran.us.r-project.org")
+
+if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org")
+
+if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org")
+
 
