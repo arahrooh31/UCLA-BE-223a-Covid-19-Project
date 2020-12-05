@@ -73,7 +73,7 @@ try:
 finally:
 	community_death_link = driver.find_elements_by_xpath('//*[@id="download2"]')[0].get_attribute('href')
 
-driver.find_elements_by_xpath('//*[@id="sidebarItemExpanded"]/ul/li[6]/a')[0].click() #community testing
+driver.find_elements_by_xpath('//*[@id="sidebarItemExpanded"]/ul/li[8]/a')[0].click() #community testing
 
 try:
 	element = WebDriverWait(driver, 10).until(
@@ -82,8 +82,7 @@ try:
 finally:
 	community_testing_link = driver.find_elements_by_xpath('//*[@id="download4"]')[0].get_attribute('href')
 	
-
-driver.find_elements_by_xpath('//*[@id="sidebarItemExpanded"]/ul/li[7]/a')[0].click() #cases/death by date
+driver.find_elements_by_xpath('//*[@id="sidebarItemExpanded"]/ul/li[9]/a')[0].click() #cases/death by date
 
 try:
 	element = WebDriverWait(driver, 10).until(
@@ -92,7 +91,7 @@ try:
 finally:
 	date_death_link = driver.find_elements_by_xpath('//*[@id="download3"]')[0].get_attribute('href')
 
-driver.find_elements_by_xpath('//*[@id="sidebarItemExpanded"]/ul/li[8]/a')[0].click() #persons tested by date
+driver.find_elements_by_xpath('//*[@id="sidebarItemExpanded"]/ul/li[10]/a')[0].click() #persons tested by date
 
 try:
 	element = WebDriverWait(driver, 10).until(
@@ -102,7 +101,7 @@ finally:
 	persons_date_link = driver.find_elements_by_xpath('//*[@id="download5"]')[0].get_attribute('href')
 	
 
-driver.find_elements_by_xpath('//*[@id="sidebarItemExpanded"]/ul/li[9]/a')[0].click() #tests by date
+driver.find_elements_by_xpath('//*[@id="sidebarItemExpanded"]/ul/li[11]/a')[0].click() #tests by date
 
 try:
 	element = WebDriverWait(driver, 10).until(
@@ -130,7 +129,7 @@ df = pandas.read_csv(StringIO((community_death.text)))
 df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 df.to_csv(file, index = False, header = True)
 print(file)
-	
+
 community_testing = requests.get(community_testing_link)
 file = os.path.join(dir, 'communitytesting.csv')
 df = pandas.read_csv(StringIO((community_testing.text)))
