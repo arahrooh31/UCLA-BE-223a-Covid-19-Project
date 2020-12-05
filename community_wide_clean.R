@@ -257,11 +257,15 @@ print("community_todayUpdated.csv created.")
 # Cleaning of county-level case/test/death data -- TODAY! #
 #=============================================================
 county_case_death = read.csv(paste0(county_data_path, "deathsbydate.csv"))
+county_dailytesting = read.csv(paste0(county_data_path, "dailytesting.csv"))
 
 county_summary = 
   county_case_death %>% 
-  select(date_use, total_cases, new_case, total_deaths, new_deaths) %>% 
-  rename(Date = date_use, TotalCases = total_cases, DailyCases = new_case, TotalDeaths = total_deaths, NewDeaths = new_deaths)
+  left_join(county_dailytesting, by = c("date_use" = "date_use")) %>% 
+  mutate(percent_positive_avg_tests = as.numeric(str_replace(percent_positive_avg_tests, "%", ""))/100) %>% 
+  select(date_use, total_cases, new_case, total_deaths, new_deaths, percent_positive_avg_tests) %>% 
+  rename(Date = date_use, TotalCases = total_cases, DailyCases = new_case, TotalDeaths = total_deaths, 
+         NewDeaths = new_deaths, PercentPosAvg = percent_positive_avg_tests)
 
 # save file
 write.csv(county_summary, paste0(cleaned_data_path, "LA_county.csv"), row.names = F)
