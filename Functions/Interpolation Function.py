@@ -262,9 +262,8 @@ def interpolation():
     ##########
     county_race_covid_df = pd.read_csv(r'Race_Ethnicity(excluding_LB_Pas).csv')
       
-    city_covid_df = city_covid_df.rename(columns={"Race_Ethnicity(excluding_LB_Pas)":"Race/Ethnicity"})
-    
     # Clean up county_race_covid_df
+    county_race_covid_df = county_race_covid_df.rename(columns={"Race_Ethnicity(excluding_LB_Pas)":"Race/Ethnicity"})
     county_race_covid_df.drop(index=0, inplace=True)
     county_race_covid_df.drop(index=4, inplace=True)
     county_race_covid_df.drop(index=6, inplace=True)
@@ -334,24 +333,6 @@ def interpolation():
     #####################################################################################################
     # DATA INTERPOLATION
     #####################################################################################################
-    '''
-    PROPORTION
-    
-    # interpolated positive cases per race in city      # positive cases per race in county
-    -------------------------------                  =   ------------------------------------
-    # people of race in city                            # people of race in county
-    
-    SCALING
-    # scaled cases per race in city =    # interpolated positive cases per race in city
-                                          ----------------------------------------        x total acutual cases
-                                           total interpolated cases for all races in city
-                                                  
-    PERCENTAGE
-      
-    % of total positives from given race = # true positive cases per race in city
-                                            --------------------------------------
-                                            total population of given race in city
-    '''
       
       # empty dataframe that will store percentage of each city's positive cases that come from each race
     city_positive_race_df = pd.DataFrame(columns=['CITY', 'ASIAN', 'BLACK', 'LATINO', 'WHITE', 'NON.WHITE',
