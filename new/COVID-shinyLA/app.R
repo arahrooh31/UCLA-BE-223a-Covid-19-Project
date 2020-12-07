@@ -20,7 +20,7 @@ if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-projec
 if(!require(evaluate)) install.packages("evaluate", repos = "http://cran.us.r-project.org")	
 
 # Step 1: Pull and clean useful COVID data -- data-preprocessing
-# source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/community_wide_clean.R")
+source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/community_wide_clean.R")
 # Step 2: Source in functions and settings used in app building
 source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/app_functions.R")
 source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/app_settings.R")

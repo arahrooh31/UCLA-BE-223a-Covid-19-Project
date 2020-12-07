@@ -79,8 +79,8 @@ community_demographic_short =
 # Load the best model so far
 load(paste0(modeling_path, "merged_community_expand.rda"))
 # Also read in the interpolated data for individual risk prediction later
-estimated_infection_race = read.csv(paste0(cleaned_data_path, "race-ethnicity_interpolated.csv")) # For each race category, the proportion of infected people in that category
-estimated_infection_age = read.csv(paste0(cleaned_data_path, "AgeInterpolationFinalDF.csv")) # For each age category, the proportion of infected people in that category
+estimated_infection_race = read.csv(paste0(interpolation_path, "race-ethnicity_interpolated.csv")) # For each race category, the proportion of infected people in that category
+estimated_infection_age = read.csv(paste0(interpolation_path, "AgeInterpolationFinalDF.csv")) # For each age category, the proportion of infected people in that category
 
 set.seed(1)
 num_folds = 5
