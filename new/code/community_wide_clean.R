@@ -25,7 +25,10 @@ modeling_path = paste0(data_path, "modeling/")
 # Source in the LA_county_scraper -- update TODAY's COVID by community
 setwd(paste0(data_path, "dynamic/"))
 reticulate::source_python(paste0(code_path, "LA_county_scraper.py"))
+reticulate::source_python(paste0(code_path, "LA_county_locations.py"))
 county_data_path = paste0(data_path, 'dynamic/county/')
+interpolation_path = paste0(data_path, 'dynamic/locations_demographics/', Sys.Date(), "/")
+
 
 #===============================================
 # Cleaning of community-level time series data #
@@ -182,7 +185,7 @@ collated_data_final =
   mutate(cumulative_3w_pop_adj = cumulative_cases_3w/population*100) %>% 
   mutate(new_3d_MA_pop_adj = case_incremental_3d_MA/population*100) %>% 
   mutate(crude_rate = cumulative_cases_today/population) %>% 
-  mutate(crude_rate_7d_lead = rollmean(crude_rate, 7, align = "right", fill = 0)) %>% 
+  mutate(crude_rate_7d_lead = lead(crude_rate, 7)) %>% 
   select(place_ID, date, population, crude_rate, crude_rate_7d_lead, # outcome (predict variable for "individual")
          new_7d_lead, new_3d_lead, # outcome (predict variable for "outbreak")
          cumulative_3w_pop_adj, cumulative_2w_pop_adj, new_3d_MA_pop_adj, # adjusted variables by population size
@@ -251,6 +254,7 @@ community_merge_today =
 
 # save file
 write.csv(community_merge_today, paste0(cleaned_data_path, "community_todayUpdated.csv"), row.names = F)
+write.csv(community_merge_today, paste0(interpolation_path, "community_todayUpdated.csv"), row.names = F)
 print("community_todayUpdated.csv created.")
   
 
@@ -273,6 +277,16 @@ write.csv(county_summary, paste0(cleaned_data_path, "LA_county.csv"), row.names 
 print("LA_county.csv created.")
 
 
+#===============================================
+# Reproduce interpolation data #
+#===============================================
+demographic_file = read.csv(paste0(county_data_path, "demographics.csv"))
+write.csv(demographic_file, paste0(interpolation_path, "demographics.csv"), row.names = F)
+community_demographic_cleaned = read.csv(paste0(data_path, "static/community_demographic_cleaned.csv"))
+write.csv(community_demographic_cleaned, paste0(interpolation_path, "community_demographic_cleaned.csv"), row.names = F)
+setwd(interpolation_path)
+reticulate::source_python(paste0(code_path, "interpolation.py"))
+
 #======================================
 # Create a dataset for BBN modeling #
 #======================================
@@ -289,5 +303,15 @@ merged_community_expand =
 # save file
 save(merged_community_expand, file = paste0(modeling_path, "merged_community_expand.rda"))
 print("merged_community_expand.rda created.")
+
+most_recent = max(collated_data_final$date)
+merged_community_mst_recent = 
+  collated_data_final %>% 
+  filter(date == most_recent) %>% 
+  inner_join(community_demo, by = c("place_ID" = "place_ID")) %>% 
+  filter(!is.na(population)) %>% 
+  filter(if_first_report != 1)
+save(merged_community_mst_recent, file = paste0(modeling_path, "merged_community_mst_recent.rda"))
+print("merged_community_mst_recent.rda created.")
 
 rm(list = ls())

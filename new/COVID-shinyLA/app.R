@@ -17,14 +17,13 @@ if(!require(geojsonio)) install.packages("geojsonio", repos = "http://cran.us.r-
 if(!require(leaflet)) install.packages("leaflet", repos = "http://cran.us.r-project.org")
 if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org")
 if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org")
+if(!require(evaluate)) install.packages("evaluate", repos = "http://cran.us.r-project.org")	
 
 # Step 1: Pull and clean useful COVID data -- data-preprocessing
 # source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/community_wide_clean.R")
-# Step 2: Reproduce interpolation
-
-# Step 3: Source in functions and settings used in app building
-# source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/app_functions.R")
-# source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/app_settings.R")
+# Step 2: Source in functions and settings used in app building
+source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/app_functions.R")
+source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/app_settings.R")
 
 
 #========================
@@ -153,13 +152,13 @@ ui = fluidPage(
                                         options = list(`actions-box` = TRUE, `none-selected-text` = "Please make a selection!"),
                                         selected = as.character(save_place_ID_and_outbreak_risk$community)[1],
                                         multiple = FALSE),
-                            pickerInput("age_select_riskIndividual", "City/Community:",
-                                        choices = c("age_18_less", "age_19_o_49", "age_50_to_64", "age_65_up"),
+                            pickerInput("age_select_riskIndividual", "Age:",
+                                        choices = c("age_18_less", "age_19_to_49", "age_50_to_64", "age_65_up"),
                                         options = list(`actions-box` = TRUE, `none-selected-text` = "Please make a selection!"),
                                         selected = "age_18_less",
                                         multiple = FALSE),
-                            pickerInput("race_select_riskIndividual", "City/Community:",
-                                        choices = c("Asian", "Black", "Latino", "White"),
+                            pickerInput("race_select_riskIndividual", "Race:",
+                                        choices = c("Asian", "Black", "Latino", "White", "Other"),
                                         options = list(`actions-box` = TRUE, `none-selected-text` = "Please make a selection!"),
                                         selected = "Asian",
                                         multiple = FALSE),
