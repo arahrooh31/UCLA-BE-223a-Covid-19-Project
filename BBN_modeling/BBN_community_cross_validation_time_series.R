@@ -66,7 +66,7 @@ date_community_freq_sufficient_n = data.frame(date_community_freq)
 
 data_no_nan = 
   data_no_nan  %>%
-  rename(new_cases_3d = new_3d_MA_pop_adj, age34_less = age_34_less_column, high_school_orless = LESS.THAN.HIGH.SCHOOL, non_white = NON.WHITE.POPULATION)
+  rename(past_cases_3d = new_3d_MA_pop_adj, age34_less = age_34_less_column, high_school_orless = LESS.THAN.HIGH.SCHOOL, non_white = NON.WHITE.POPULATION)
 
 # plot network func
 # using the visNetwork package to plot the network because it looks very nice.
@@ -189,14 +189,14 @@ for (week_index in 1:nrow(date_community_freq_sufficient_n)){
   
   data_covidCases_education_age_race = 
     data_no_nan_week %>%
-    select(outbreak_7d_lead, cumulative_3w_pop_adj, new_cases_3d, high_school_orless, age34_less, non_white) 
+    select(outbreak_7d_lead, cumulative_3w_pop_adj, past_cases_3d, high_school_orless, age34_less, non_white) 
     
   
   # Randomly shuffle before doing train-test splitting
   data_covidCases_education_age_race = data_covidCases_education_age_race[sample(nrow(data_covidCases_education_age_race)), ]
   
-  structure_covidCases_education_age_race = empty.graph(c("outbreak_7d_lead", "cumulative_3w_pop_adj", "new_cases_3d", "high_school_orless", "age34_less", "non_white"))
-  modelstring(structure_covidCases_education_age_race) = paste0("[outbreak_7d_lead|cumulative_3w_pop_adj:new_cases_3d][new_cases_3d|cumulative_3w_pop_adj][cumulative_3w_pop_adj|high_school_orless:non_white:age34_less][high_school_orless|non_white][non_white][age34_less]")
+  structure_covidCases_education_age_race = empty.graph(c("outbreak_7d_lead", "cumulative_3w_pop_adj", "past_cases_3d", "high_school_orless", "age34_less", "non_white"))
+  modelstring(structure_covidCases_education_age_race) = paste0("[outbreak_7d_lead|cumulative_3w_pop_adj:past_cases_3d][past_cases_3d|cumulative_3w_pop_adj][cumulative_3w_pop_adj|high_school_orless:non_white:age34_less][high_school_orless|non_white][non_white][age34_less]")
   
   # Run cross validation using the given features
   cv_results_education_age_race = run_cross_validation(structure_covidCases_education_age_race, data_covidCases_education_age_race, num_folds)
@@ -249,8 +249,8 @@ save(merge_interpolated_age_race, file = (paste0(local_path, "merge_interoplated
 merge_community_interpolated =  
   community_latest %>% 
   inner_join(merge_interpolated_age_race, by = c("place_ID" = "Place")) %>% # Then take the intersection between interpolated data and community data
-  # select(outbreak_7d_lead, cumulative_3w_pop_adj, new_cases_3d, high_school_orless, age34_less, non_white, Asian_infected, Black_infected, Latino_infected, White_infected, Non_white_infected, age_18_less_infected, age_19_to_49_infected, age_50_to_65_infected, age_65_up_infected)
-  select(outbreak_7d_lead, cumulative_3w_pop_adj, new_cases_3d, high_school_orless, age34_less, non_white, age_49_less_infected, Non_white_infected)
+  # select(outbreak_7d_lead, cumulative_3w_pop_adj, past_cases_3d, high_school_orless, age34_less, non_white, Asian_infected, Black_infected, Latino_infected, White_infected, Non_white_infected, age_18_less_infected, age_19_to_49_infected, age_50_to_65_infected, age_65_up_infected)
+  select(outbreak_7d_lead, cumulative_3w_pop_adj, past_cases_3d, high_school_orless, age34_less, non_white, age_49_less_infected, Non_white_infected)
 
 d_bins_latest_time_window = discretize_get_bins(data = merge_community_interpolated, n_bins=3)
 merge_community_interpolated_discrete = discretize_df(data = merge_community_interpolated, data_bins = d_bins_latest_time_window, stringsAsFactors=T)
@@ -259,14 +259,14 @@ merge_community_interpolated_discrete = as.data.frame(merge_community_interpolat
 # Randomly shuffle before doing train-test splitting
 merge_community_interpolated_discrete = merge_community_interpolated_discrete[sample(nrow(merge_community_interpolated_discrete)), ]
 
-structure_community_interpolated = empty.graph(c("outbreak_7d_lead", "cumulative_3w_pop_adj", "new_cases_3d", "high_school_orless", "age34_less", "non_white", "age_49_less_infected", "Non_white_infected"))
-modelstring(structure_community_interpolated) = paste0("[outbreak_7d_lead|cumulative_3w_pop_adj:new_cases_3d:age_49_less_infected:Non_white_infected]",
-                                                       "[new_cases_3d|cumulative_3w_pop_adj][cumulative_3w_pop_adj|high_school_orless:non_white:age34_less][high_school_orless|non_white][non_white][age34_less]",
+structure_community_interpolated = empty.graph(c("outbreak_7d_lead", "cumulative_3w_pop_adj", "past_cases_3d", "high_school_orless", "age34_less", "non_white", "age_49_less_infected", "Non_white_infected"))
+modelstring(structure_community_interpolated) = paste0("[outbreak_7d_lead|cumulative_3w_pop_adj:past_cases_3d:age_49_less_infected:Non_white_infected]",
+                                                       "[past_cases_3d|cumulative_3w_pop_adj][cumulative_3w_pop_adj|high_school_orless:non_white:age34_less][high_school_orless|non_white][non_white][age34_less]",
                                                        "[age_49_less_infected][Non_white_infected]")
 
-# structure_community_interpolated = empty.graph(c("outbreak_7d_lead", "cumulative_3w_pop_adj", "new_cases_3d", "high_school_orless", "age34_less", "non_white", "Asian_infected", "Black_infected", "Latino_infected", "White_infected", "Non_white_infected", "age_18_less_infected", "age_19_to_49_infected", "age_50_to_65_infected", "age_65_up_infected"))
-# modelstring(structure_community_interpolated) = paste0("[outbreak_7d_lead|cumulative_3w_pop_adj:new_cases_3d:Asian_infected:Black_infected:Latino_infected:White_infected:Non_white_infected:age_18_less_infected:age_19_to_49_infected:age_50_to_65_infected:age_65_up_infected]",
-#                                                        "[new_cases_3d|cumulative_3w_pop_adj][cumulative_3w_pop_adj|high_school_orless:non_white:age34_less][high_school_orless|non_white][non_white][age34_less]",
+# structure_community_interpolated = empty.graph(c("outbreak_7d_lead", "cumulative_3w_pop_adj", "past_cases_3d", "high_school_orless", "age34_less", "non_white", "Asian_infected", "Black_infected", "Latino_infected", "White_infected", "Non_white_infected", "age_18_less_infected", "age_19_to_49_infected", "age_50_to_65_infected", "age_65_up_infected"))
+# modelstring(structure_community_interpolated) = paste0("[outbreak_7d_lead|cumulative_3w_pop_adj:past_cases_3d:Asian_infected:Black_infected:Latino_infected:White_infected:Non_white_infected:age_18_less_infected:age_19_to_49_infected:age_50_to_65_infected:age_65_up_infected]",
+#                                                        "[past_cases_3d|cumulative_3w_pop_adj][cumulative_3w_pop_adj|high_school_orless:non_white:age34_less][high_school_orless|non_white][non_white][age34_less]",
 #                                                        "[Asian_infected][Black_infected][Latino_infected][White_infected][Non_white_infected][age_18_less_infected][age_19_to_49_infected][age_50_to_65_infected][age_65_up_infected]")
 
 plot.network(structure_community_interpolated)
