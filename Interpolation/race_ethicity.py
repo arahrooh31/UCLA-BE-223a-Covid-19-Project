@@ -5,6 +5,10 @@ import pandas as pd
 import numpy as np
 
 def race_ethnicity_interpolation():
+  '''
+  Computes the interpolated city-wide covid figures for each demographic group.
+  Returns string containing path to csv file containing interpolated data.
+  '''
 
   #####################################################################################################
   # PREPROCESSING
@@ -109,14 +113,12 @@ def race_ethnicity_interpolation():
   ##########
   county_race_covid_df = pd.read_csv(r'Race_Ethnicity(excluding_LB_Pas).csv')
   
-  city_covid_df = city_covid_df.rename(columns={"Race_Ethnicity(excluding_LB_Pas)":"Race/Ethnicity"})
-  
   # Clean up county_race_covid_df
+  county_race_covid_df = county_race_covid_df.rename(columns={"Race_Ethnicity(excluding_LB_Pas)":"Race/Ethnicity"})
   county_race_covid_df.drop(index=0, inplace=True)
   county_race_covid_df.drop(index=4, inplace=True)
   county_race_covid_df.drop(index=6, inplace=True)
   county_race_covid_df.drop(index=7, inplace=True)
-  
   
   non_white = 0
   for i, row in county_race_covid_df.iterrows():
@@ -264,3 +266,4 @@ def race_ethnicity_interpolation():
   # Save output to csv
   ##########
   city_positive_race_df.to_csv('race-ethnicity_interpolated.csv')
+  return 'race-ethnicity_interpolated.csv'
