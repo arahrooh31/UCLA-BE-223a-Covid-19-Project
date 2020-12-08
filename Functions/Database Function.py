@@ -145,7 +145,7 @@ def create_database():
     c.execute('''Select * From CommunityTimeCasesLong''').fetchall()
     
     df32 = pd.read_csv('data/LA_county.csv')
-    df32.to_sql('LACountyCleaned',conn, if_exists = 'append', index = False)
+    df32.to_sql('LACountyDeathsCleaned',conn, if_exists = 'append', index = False)
     c.execute('''Select * From LACountyDeathsCleaned''').fetchall()
     
     
