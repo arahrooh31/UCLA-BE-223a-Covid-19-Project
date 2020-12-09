@@ -20,10 +20,10 @@ if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-projec
 if(!require(evaluate)) install.packages("evaluate", repos = "http://cran.us.r-project.org")	
 
 # Step 1: Pull and clean useful COVID data -- data-preprocessing
-source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/community_wide_clean.R")
+# source("~/Downloads/new/code/community_wide_clean.R")
 # Step 2: Source in functions and settings used in app building
-source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/app_functions.R")
-source("/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/code/app_settings.R")
+source("~/Downloads/new/code/app_functions.R")
+source("~/Downloads/new/code/app_settings.R")
 
 
 #========================
@@ -304,8 +304,9 @@ server = function(input, output, session) {
     community_risk_to_plot %>% filter(geo_merge %in% community_location$label )
   })
   # Results for individual predictions
+  from_BBN = build_individual_BBN()
   individual_results_db = reactive({
-    make_prediction_on_one_person(input$region_select_riskIndividual, 
+    make_prediction_on_one_person(from_BBN[[1]], from_BBN[[2]],input$region_select_riskIndividual, 
                                   input$age_select_riskIndividual, 
                                   input$race_select_riskIndividual)
   })

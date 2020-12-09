@@ -9,7 +9,7 @@ if(!require(funModeling)) install.packages('funModeling', repos = "http://cran.u
 if(!require(geojsonio)) install.packages("geojsonio", repos = "http://cran.us.r-project.org")
 
 # file paths and names for long-term use
-local_path = "/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/"
+local_path = "~/Downloads/new/"
 data_path = paste0(local_path, "data/")
 cleaned_data_path = paste0(data_path, 'output_clean/')
 modeling_path = paste0(data_path, 'modeling/')
@@ -101,9 +101,9 @@ data =
   ))) 
 data = as.data.frame(data)
 
-d_bins = discretize_get_bins(data = data, n_bins = 3)
-save(d_bins, file = (paste0(modeling_path, "discretization_params.rda")))
-data = discretize_df(data = data, data_bins = d_bins, stringsAsFactors = T)
+d_bins_community_no_interpolation = discretize_get_bins(data = data, n_bins=3)
+save(d_bins_community_no_interpolation, file = (paste0(modeling_path, "discretization_params_community_no_interpolation.rda")))
+data = discretize_df(data = data, data_bins = d_bins_community_no_interpolation, stringsAsFactors=T)
 data = as.data.frame(data)
 
 # Delete the communities/rows that have nan values
@@ -196,8 +196,9 @@ merge_community_interpolated =
   # select(outbreak_7d_lead, cumulative_3w_pop_adj, past_cases_3d, high_school_orless, age34_less, non_white, Asian_infected, Black_infected, Latino_infected, White_infected, Non_white_infected, age_18_less_infected, age_19_to_49_infected, age_50_to_65_infected, age_65_up_infected)
   select(outbreak_7d_lead, cumulative_3w_pop_adj, past_cases_3d, high_school_orless, age34_less, non_white, age_49_less_infected, Non_white_infected)
 
-d_bins_latest_time_window = discretize_get_bins(data = merge_community_interpolated, n_bins = 3)
-merge_community_interpolated_discrete = discretize_df(data = merge_community_interpolated, data_bins = d_bins_latest_time_window, stringsAsFactors=T)
+d_bins_community_with_interpolation = discretize_get_bins(data = merge_community_interpolated, n_bins=3)
+save(d_bins_community_with_interpolation, file = (paste0(modeling_path, "discretization_params_community_with_interpolation.rda")))
+merge_community_interpolated_discrete = discretize_df(data = merge_community_interpolated, data_bins = d_bins_community_with_interpolation, stringsAsFactors=T)
 merge_community_interpolated_discrete = as.data.frame(merge_community_interpolated_discrete)
 
 # Randomly shuffle before doing train-test splitting
@@ -220,25 +221,32 @@ F2_latest_time_window_with_interpolation = cv_results_merge_community_interpolat
 
 community_interpolation_best_model = cv_results_merge_community_interpolated[[6]]
 save(community_interpolation_best_model, file = (paste0(modeling_path, "community_model_best_fold_sensitivity_latest_with_interpolation.rda")))
+save(cv_results_merge_community_interpolated, file = (paste0(modeling_path, "community_model_performance_with_interpolation.rda")))
 
 # Function for outbreak risk prediction on all communities
 make_prediction_on_all_communities = function(filepath){
   filepath = modeling_path
   load(paste0(filepath, "merged_community_mst_recent.rda"))
   load(paste0(filepath, "merged_community_expand.rda"))
-  load(paste0(filepath, "discretization_params.rda"))
-  load(paste0(filepath, "community_model_best_fold_sensitivity_latest_time_window.rda")) # In this saved model, the target variable is "outbreak_7d_lead". community_best_model
+  load(paste0(filepath, "merge_interoplated_age_race.rda"))
+  load(paste0(filepath, "discretization_params_community_with_interpolation.rda"))
+  load(paste0(filepath, "discretization_params_community_no_interpolation.rda"))
+  load(paste0(filepath, "community_model_best_fold_sensitivity_latest_with_interpolation.rda")) # In this saved model, the target variable is "outbreak_7d_lead". community_best_model
   
   # Preprocessing of the data for community level prediction#
+  
+  # Add interpolated race and age data
   community_latest = 
-    merged_community_mst_recent  %>% 
-    filter(date == max(as.Date(merged_community_mst_recent$date)))   # Get the latest day available
+    merged_community_mst_recent %>%
+    inner_join(merge_interpolated_age_race, by = c("place_ID" = "Place")) # Then take the intersection between interpolated data and community data
   
   age_34_less_column = community_latest$AGE.10.OR.LESS + community_latest$AGE.11.TO.18 + community_latest$AGE.19.TO.34 
   community_latest = cbind(community_latest, age_34_less_column)
   
   # Apply the same discretization parameters from the trained model
-  community_latest = discretize_df(data = community_latest, data_bins = d_bins, stringsAsFactors=T)
+  community_latest = discretize_df(data = community_latest, data_bins = d_bins_community_no_interpolation, stringsAsFactors=T)
+  community_latest = discretize_df(data = community_latest, data_bins = d_bins_community_with_interpolation, stringsAsFactors=T)
+  
   
   # Delete the communities/rows that have nan values
   community_latest = na.omit(community_latest)
@@ -246,9 +254,9 @@ make_prediction_on_all_communities = function(filepath){
   community_latest_selected_variables_no_nan = 
     community_latest %>% 
     rename(outbreak_7d_lead = new_7d_lead, past_cases_3d = new_3d_MA_pop_adj, age34_less = age_34_less_column, high_school_orless = LESS.THAN.HIGH.SCHOOL, non_white = NON.WHITE.POPULATION) %>%
-    select(outbreak_7d_lead, cumulative_3w_pop_adj, past_cases_3d, high_school_orless, age34_less, non_white)
+    select(outbreak_7d_lead, cumulative_3w_pop_adj, past_cases_3d, high_school_orless, age34_less, non_white, age_49_less_infected, Non_white_infected)
   
-  community_predictions = inference_on_new_samples(community_best_model, community_latest_selected_variables_no_nan)
+  community_predictions = inference_on_new_samples(community_interpolation_best_model, community_latest_selected_variables_no_nan)
   community_pred_test_samples_prob = community_predictions[[1]]
   community_pred_classes = community_predictions[[2]]
   # For visualization purpose. Save the place_ID and its according predicted probability or risk of outbreak.
@@ -269,6 +277,10 @@ make_prediction_on_all_communities = function(filepath){
   community_latest = 
     merged_community_expand %>%
     filter(date == max(as.Date(merged_community_expand$date))) 
+  # Delete the communities that don't have age and race interpolation
+  community_latest = 
+    community_latest %>%
+    inner_join(merge_interpolated_age_race, by = c("place_ID" = "Place")) # Then take the intersection between interpolated data and community data
   
   # Then add the predicted risk scores from the community modeling
   community_latest_outbreak_risk = cbind(community_latest, data.frame(community_pred_test_samples_prob))
@@ -298,7 +310,7 @@ make_prediction_on_all_communities = function(filepath){
 
 
 # Function for individual level risk prediction#
-make_prediction_on_one_person = function(community, age, race){
+build_individual_BBN = function(){
   filepath = modeling_path
   output_community = make_prediction_on_all_communities(filepath)
   age_infected_category_dynamic = read.csv(paste0(interpolation_path, "Age_Group(excluding_LB_Pas).csv"))
@@ -338,7 +350,7 @@ make_prediction_on_one_person = function(community, age, race){
   net_age_race_outbreak_infection = model2network("[infection|age:race:outbreak][age][race][outbreak]")
   plot.network(net_age_race_outbreak_infection)
   # Priors. Static data.
-  cpt_age = array(c(age_18_less_percent_pop, age_19_49_percent_pop, age_50_64_percent_pop, age_65_up_percent_pop), dim = 4, dimnames = list("age" = c("age_18_less", "age_19_o_49", "age_50_to_64", "age_65_up"))) # The probability of each age category
+  cpt_age = array(c(age_18_less_percent_pop, age_19_49_percent_pop, age_50_64_percent_pop, age_65_up_percent_pop), dim = 4, dimnames = list("age" = c("age_18_less", "age_19_to_49", "age_50_to_64", "age_65_up"))) # The probability of each age category
   cpt_race = array(c(Asian_percent_pop, Black_percent_pop, Latino_percent_pop, White_percent_pop, Other_percent_pop), dim = 5, dimnames = list("race" = c("Asian", "Black", "Latino", "White", "Other"))) # The probability of each race category
   cpt_outbreak = array(individual_model_outbreak_infection$pred_outbreak_risk$prob, dim = 3, dimnames = list("outbreak" = c("High_risk_outbreak", "Intermediate_risk_outbreak", "Low_risk_outbreak"))) # The probability of each outbreak risk category
   
@@ -358,11 +370,14 @@ make_prediction_on_one_person = function(community, age, race){
                                             infOutbreak[3] *infAge[2] * infRace[1], 1 - (infOutbreak[3] *infAge[2] * infRace[1]), infOutbreak[3] *infAge[2] * infRace[2], 1 - (infOutbreak[3] *infAge[2] * infRace[2]), infOutbreak[3] *infAge[2] * infRace[3], 1 - (infOutbreak[3] *infAge[2] * infRace[3]), infOutbreak[3] *infAge[2] * infRace[4], 1 - (infOutbreak[3] *infAge[2] * infRace[4]), infOutbreak[3] *infAge[2] * infRace[5], 1 - (infOutbreak[3] *infAge[2] * infRace[5]),
                                             infOutbreak[3] *infAge[3] * infRace[1], 1 - (infOutbreak[3] *infAge[3] * infRace[1]), infOutbreak[3] *infAge[3] * infRace[2], 1 - (infOutbreak[3] *infAge[3] * infRace[2]), infOutbreak[3] *infAge[3] * infRace[3], 1 - (infOutbreak[3] *infAge[3] * infRace[3]), infOutbreak[3] *infAge[3] * infRace[4], 1 - (infOutbreak[3] *infAge[3] * infRace[4]), infOutbreak[3] *infAge[3] * infRace[5], 1 - (infOutbreak[3] *infAge[3] * infRace[5]), 
                                             infOutbreak[3] *infAge[4] * infRace[1], 1 - (infOutbreak[3] *infAge[4] * infRace[1]), infOutbreak[3] *infAge[4] * infRace[2], 1 - (infOutbreak[3] *infAge[4] * infRace[2]), infOutbreak[3] *infAge[4] * infRace[3], 1 - (infOutbreak[3] *infAge[4] * infRace[3]), infOutbreak[3] *infAge[4] * infRace[4],1 - (infOutbreak[3] *infAge[4] * infRace[4]), infOutbreak[3] *infAge[4] * infRace[5],1 - (infOutbreak[3] *infAge[4] * infRace[5])),
-                                          dim = c(2, 5, 4, 3), dimnames = list("infection" = c("Infected", "Not_infected"), "race" = c("Asian", "Black", "Latino", "White", "Other"), "age" = c("age_18_less", "age_19_o_49", "age_50_to_64", "age_65_up"), "outbreak" = c("High_risk_outbreak", "Intermediate_risk_outbreak", "Low_risk_outbreak")))
+                                          dim = c(2, 5, 4, 3), dimnames = list("infection" = c("Infected", "Not_infected"), "race" = c("Asian", "Black", "Latino", "White", "Other"), "age" = c("age_18_less", "age_19_to_49", "age_50_to_64", "age_65_up"), "outbreak" = c("High_risk_outbreak", "Intermediate_risk_outbreak", "Low_risk_outbreak")))
   
   # Fit the BBN using the CPTs. The function automatically checks for the validity of all numbers. E.g. the probability distribution of a node summing to one.
   individual_model_manual = custom.fit(net_age_race_outbreak_infection, list("infection" = cpt_age_race_outbreak_infection, "race" = cpt_race, "age" = cpt_age, "outbreak" = cpt_outbreak))
-  
+  return (list(individual_model_manual, save_place_ID_and_outbreak_risk))
+}
+
+make_prediction_on_one_person = function(individual_model_manual, save_place_ID_and_outbreak_risk, community, age, race){
   # Get the parameters from users and from the calculation of user's community outbreak risk
   user_community_risk_category = save_place_ID_and_outbreak_risk[save_place_ID_and_outbreak_risk$place_ID == community, ]$community_pred_test_samples_category # Find the risk category of the user's community
   userinput = setNames(data.frame(matrix(ncol = 3, nrow = 1)), c("outbreak", "age", "race"))
@@ -372,10 +387,10 @@ make_prediction_on_one_person = function(community, age, race){
   event = paste("(infection == 'Infected')", sep = "")
   cmd_yes = paste("cpquery(individual_model_manual, ", event, ", ", evidence, ")", sep = "")
   prediction_infected = eval(parse(text = cmd_yes))
-  # print(cpquery(individual_model_manual, (infection == 'Infected'), (outbreak == 'High_risk_outbreak') & (age == "age_19_o_49") & (race == "Latino")))
+  # print(cpquery(individual_model_manual, (infection == 'Infected'), (outbreak == 'High_risk_outbreak') & (age == "age_19_to_49") & (race == "Latino")))
   # print(cpquery(individual_model_manual, (infection == 'Infected'), (outbreak == 'High_risk_outbreak') & (age == "age_65_up") & (race == "Latino")))
-  # print(cpquery(individual_model_manual, (infection == "Infected"), (age == "age_19_o_49") & outbreak == 'No_outbreak'))
-  # print(cpquery(individual_model_manual, (infection == "Infected"), (age == "age_19_o_49") & (outbreak == 'High_risk_outbreak')))
+  # print(cpquery(individual_model_manual, (infection == "Infected"), (age == "age_19_to_49") & outbreak == 'No_outbreak'))
+  # print(cpquery(individual_model_manual, (infection == "Infected"), (age == "age_19_to_49") & (outbreak == 'High_risk_outbreak')))
   # print(cpquery(individual_model_manual, (infection == "Infected"), (race == "Black") & outbreak == 'No_outbreak'))
   # print(cpquery(individual_model_manual, (infection == "Infected"), (race == "Black") & (outbreak == 'High_risk_outbreak')))
   return (list(user_community_risk_category, prediction_infected, save_place_ID_and_outbreak_risk))
