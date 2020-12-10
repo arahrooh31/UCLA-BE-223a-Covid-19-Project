@@ -1,0 +1,10 @@
+"characteristic","total","percent_total_percent","percent_total_nm_percent","population_percent","crude_rate","adj_case_rate","rate_unstable","POP"
+"<5 years old",10523,"2.5%","2.5%","5.4%",2001,NA,NA,525893
+"5 to 11 years old",17625,"4.1%","4.1%","8.8%",2069,NA,NA,851726
+"12 to 17 years old",21803,"5.1%","5.1%","7.5%",3031,NA,NA,719377
+"18 to 29 years old",106825,"25%","25.1%","17.6%",6271,NA,NA,1703423
+"30 to 49 years old",146056,"34.1%","34.3%","28.2%",5359,NA,NA,2725450
+"50 to 64 years old",80533,"18.8%","18.9%","19.2%",4337,NA,NA,1856788
+"65 to 79 years old",31298,"7.3%","7.3%","9.7%",3360,NA,NA,931389
+"80+ years old",11743,"2.7%","2.8%","3.5%",3482,NA,NA,337286
+"Unknown/Missing",1293,"0.3%","-","",NA,NA,NA,NA
