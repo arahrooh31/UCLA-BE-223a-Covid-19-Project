@@ -1,0 +1,10 @@
+characteristic,total,percent_total_percent,percent_total_nm_percent,population_percent,crude_rate,adj_case_rate,rate_unstable,POP
+<5 years old,10746,2.5%,2.5%,5.4%,2043.0,,,525893.0
+5 to 11 years old,18107,4.2%,4.2%,8.8%,2126.0,,,851726.0
+12 to 17 years old,22282,5.1%,5.1%,7.5%,3097.0,,,719377.0
+18 to 29 years old,108831,25%,25.1%,17.6%,6389.0,,,1703423.0
+30 to 49 years old,148669,34.1%,34.2%,28.2%,5455.0,,,2725450.0
+50 to 64 years old,81923,18.8%,18.9%,19.2%,4412.0,,,1856788.0
+65 to 79 years old,31822,7.3%,7.3%,9.7%,3417.0,,,931389.0
+80+ years old,11924,2.7%,2.7%,3.5%,3535.0,,,337286.0
+Unknown/Missing,1304,0.3%,-,,,,,
