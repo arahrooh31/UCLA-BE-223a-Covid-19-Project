@@ -18,15 +18,19 @@ if(!require(leaflet)) install.packages("leaflet", repos = "http://cran.us.r-proj
 if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org")
 if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org")
 if(!require(evaluate)) install.packages("evaluate", repos = "http://cran.us.r-project.org")	
+if(!require(base64enc)) install.packages("base64enc", repos = "http://cran.us.r-project.org")	
 
-# Step 1: Pull and clean useful COVID data -- data-preprocessing
-# source("~/Downloads/new/code/community_wide_clean.R")
-# Step 2: Source in functions and settings used in app building
 working_dir = getwd()
+# Step 1: Pull and clean useful COVID data -- data-preprocessing
+source(paste0(working_dir, "/code/community_wide_clean.R"))
+# Step 2: Source in functions and settings used in app building
+setwd(working_dir)
 source(paste0(working_dir, "/code/app_functions.R"))
 source(paste0(working_dir, "/code/app_settings.R"))
 
-
+study_design = base64enc::dataURI(file = "www/study-design.png", mime = "image/png")
+BBN = base64enc::dataURI(file = "www/BBN.png", mime = "image/png")
+ucla_logo = base64enc::dataURI(file = "www/ucla-logo.png", mime = "image/png")
 #========================
 #     APP FUNCTIONS     #
 #========================
@@ -182,7 +186,18 @@ ui = fluidPage(
                                      h3(textOutput("individual_risk"), align = "middle"),
                                      leafletOutput("community_risk_map")
                             ),
-                            tabPanel("About the model"
+                            tabPanel("About the model",
+                              tags$div(
+                                       tags$h4("Overall study design"), 
+                                       tags$img(src = study_design, width = "50%", height = "50%"), tags$br(),
+                                       tags$br(), tags$h4("Bayesian Belief Network (BBN) modeling"), 
+                                       "In our predictions of risks for community outbreaks and indiviudals, we used BBN models, which allows us to update beliefs 
+                                       based on new evidence and do reasoning with uncertainty. BBNs are constructed from Bayes’ Rule of conditional probability: 
+                                       certain events having already occurred make other events more likely to occur. The structure of our BBN model is displayed 
+                                       below as a directed graph, where the nodes represent a possible state and arrows connect parent/child nodes based on the conditional 
+                                       probability of child node X given parent node Y. ", tags$br(),
+                                       tags$img(src = BBN, width = "70%", height = "70%"), tags$br()
+                                     )
                                      
                             )
                             
@@ -192,7 +207,22 @@ ui = fluidPage(
 
              ),
 
-             tabPanel("About this site"
+             tabPanel("About this site",
+              tags$div(
+                        tags$h4("Last update"), 
+                        "This site is updated every time reopen the app. At this time of rapid escalation of the COVID-19 pandemic, the following resources offer the latest numbers of known cases in LA county:", tags$br(),
+                        tags$a(href="http://dashboard.publichealth.lacounty.gov/covid19_surveillance_dashboard/", "LADPH dashboard"), tags$br(),
+                        tags$a(href="https://github.com/datadesk/california-coronavirus-data", "LA Times CA COVID data GitHub repository"), tags$br(),
+                        tags$br(), "The demographic data of LA county by community were scraped from this site:", tags$br(),
+                        tags$a(href="http://maps.latimes.com/neighborhoods/", "LA Times neighborhoods dashboard"), tags$br(),
+                        tags$br(), "The aim of this site is to complement the above resources by providing several interactive features, including the timeline function, 
+                        the ability to overlay past outbreaks, and make predictions of outbreaks in communities and identify personal risks in the future (1 week ahead).",tags$br(),
+                        tags$br(),tags$br(),tags$h4("Authors"),
+                        "Al Rahrooh, David Zheng, Dylan Steinecke, Joy Fu, Rina Ding, Sarah Madsen", tags$br(),
+                        "University of California, Los Angeles", tags$br(),
+                        tags$img(src = ucla_logo, width = "100px", height = "50px"),
+                        tags$br(),tags$br(), "Courtesy to the guidance provided by Dr. Alex Bui, Anders Olav Garlid, and Panayiotis Petousis"
+                      )
              )
   )          
 )

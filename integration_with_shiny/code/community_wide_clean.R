@@ -315,4 +315,4 @@ merged_community_mst_recent =
 save(merged_community_mst_recent, file = paste0(modeling_path, "merged_community_mst_recent.rda"))
 print("merged_community_mst_recent.rda created.")
 
-rm(list = ls())
+# rm(list = ls())
