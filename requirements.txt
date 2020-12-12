@@ -26,5 +26,6 @@ geojsonio
 leaflet
 RColorBrewer
 plotly
+base64enc
 
 
