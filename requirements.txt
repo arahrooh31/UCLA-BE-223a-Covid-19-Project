@@ -9,7 +9,7 @@ selenium
 sqlite3
 
 R:
-Unlearn
+bnlearn
 visNetwork
 tidyverse
 e1071
