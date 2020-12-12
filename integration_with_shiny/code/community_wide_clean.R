@@ -14,9 +14,10 @@ if(!require(reticulate)) install.packages("reticulate", repos = "http://cran.us.
 if(!require(RcppRoll)) install.packages("RcppRoll", repos = "http://cran.us.r-project.org")
 
 
-local_path = "~/Downloads/new/"
-code_path = paste0(local_path, "code/")
-data_path = paste0(local_path, "data/")
+# local_path = "~/Downloads/new/"
+working_dir = getwd()
+code_path = paste0(working_dir, "/code/")
+data_path = paste0(working_dir, "/data/")
 
 # Output for cleaned files
 cleaned_data_path = paste0(data_path, 'output_clean/')

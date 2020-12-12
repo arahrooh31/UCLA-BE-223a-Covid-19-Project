@@ -22,8 +22,9 @@ if(!require(evaluate)) install.packages("evaluate", repos = "http://cran.us.r-pr
 # Step 1: Pull and clean useful COVID data -- data-preprocessing
 # source("~/Downloads/new/code/community_wide_clean.R")
 # Step 2: Source in functions and settings used in app building
-source("~/Downloads/new/code/app_functions.R")
-source("~/Downloads/new/code/app_settings.R")
+working_dir = getwd()
+source(paste0(working_dir, "/code/app_functions.R"))
+source(paste0(working_dir, "/code/app_settings.R"))
 
 
 #========================

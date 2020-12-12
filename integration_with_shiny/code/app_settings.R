@@ -9,8 +9,9 @@ if(!require(funModeling)) install.packages('funModeling', repos = "http://cran.u
 if(!require(geojsonio)) install.packages("geojsonio", repos = "http://cran.us.r-project.org")
 
 # file paths and names for long-term use
-local_path = "~/Downloads/new/"
-data_path = paste0(local_path, "data/")
+# local_path = "~/Downloads/new/"
+working_dir = getwd()
+data_path = paste0(working_dir, "/data/")
 cleaned_data_path = paste0(data_path, 'output_clean/')
 modeling_path = paste0(data_path, 'modeling/')
 interpolation_path = paste0(data_path, 'dynamic/locations_demographics/', Sys.Date(), "/")

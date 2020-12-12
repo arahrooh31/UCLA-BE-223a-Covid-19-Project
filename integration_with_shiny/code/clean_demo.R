@@ -1,8 +1,9 @@
 #===============================================
 # Cleaning of community-level demographic data #
 #===============================================
-local_path = "/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/"
-data_path = paste0(local_path, "data/")
+# local_path = "/Users/Mingzhou/Desktop/2020_Fall/BE 223A/Group_project/new/"
+working_dir = getwd()
+data_path = paste0(working_dir, "/data/")
 output_data_path = paste0(data_path, 'static/')
 
 community_demo = read.csv(paste0(data_path, "static/neighborhood_data_latimes.csv"))
