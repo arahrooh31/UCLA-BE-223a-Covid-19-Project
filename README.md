@@ -1,6 +1,6 @@
 UCLA BE223A Project
 
-Please run the program through your command line.
+Please run the program through your command line. Use the following 2 commands:
 
 cd integration_with_shiny
 
